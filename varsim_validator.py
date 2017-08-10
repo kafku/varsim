@@ -10,9 +10,9 @@ import itertools
 import glob
 import re
 from distutils.version import LooseVersion
-from liftover_restricted_vcf_map import lift_vcfs, lift_maps
-from generate_small_test_ref import gen_restricted_ref_and_vcfs 
-from varsim import varsim_main, get_version, check_java, get_loglevel, makedirs, RandVCFOptions, RandDGVOptions
+from .liftover_restricted_vcf_map import lift_vcfs, lift_maps
+from .generate_small_test_ref import gen_restricted_ref_and_vcfs 
+from .varsim import varsim_main, get_version, check_java, get_loglevel, makedirs, RandVCFOptions, RandDGVOptions
 import json
 from copy import deepcopy
 
@@ -43,7 +43,7 @@ def aggregate_reports(sample_reports, samples, variant_type="all"):
     logger = logging.getLogger(aggregate_reports.__name__)
 
     if not samples:
-        samples = sample_reports.keys() 
+        samples = list(sample_reports.keys()) 
 
     enabled = ENABLED_DICT[variant_type]
 
@@ -87,8 +87,8 @@ def varsim_multi_validation(regions, samples, varsim_dirs, variants_dirs, out_di
    
     samples_found = {}
     for sample in samples:
-        truth = filter(os.path.isfile, map(lambda d: os.path.join(d, sample, "out", "lifted", "truth.vcf"), varsim_dirs))
-        called = filter(os.path.isfile, map(lambda d: os.path.join(d, sample, "{}.vcf".format(sample)), variants_dirs))
+        truth = list(filter(os.path.isfile, [os.path.join(d, sample, "out", "lifted", "truth.vcf") for d in varsim_dirs]))
+        called = list(filter(os.path.isfile, [os.path.join(d, sample, "{}.vcf".format(sample)) for d in variants_dirs]))
         if truth and called:
             samples_found[sample] = {"truth": truth[0], "called": called[0]}
 
@@ -147,7 +147,7 @@ def varsim_multi_validation(regions, samples, varsim_dirs, variants_dirs, out_di
     final_report["per_sample"] = per_sample_accuracies
 
     final_report["num_samples"] = len(final_report["samples"])
-    print json.dumps(final_report, indent=2)
+    print(json.dumps(final_report, indent=2))
 
 
 if __name__ == "__main__":

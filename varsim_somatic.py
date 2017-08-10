@@ -8,8 +8,8 @@ import sys
 import subprocess
 import logging
 import time
-from varsim import MY_DIR, VARSIMJAR, DEFAULT_VARSIMJAR, REQUIRE_VARSIMJAR
-from varsim import check_java, makedirs, monitor_processes, check_executable, run_vcfstats, run_randvcf, get_version, RandVCFOptions
+from .varsim import MY_DIR, VARSIMJAR, DEFAULT_VARSIMJAR, REQUIRE_VARSIMJAR
+from .varsim import check_java, makedirs, monitor_processes, check_executable, run_vcfstats, run_randvcf, get_version, RandVCFOptions
 
 VARSIM_PY = os.path.join(MY_DIR, "varsim.py")
 
@@ -151,7 +151,7 @@ def varsim_somatic_main():
             fixed_somatic_vcfs.append(copied_vcf)
 
     vcf_files = (fixed_somatic_vcfs + normal_vcfs) if args.merge_priority == "sn" else (normal_vcfs + fixed_somatic_vcfs)
-    vcf_files = map(os.path.realpath, filter(None, vcf_files))
+    vcf_files = list(map(os.path.realpath, [_f for _f in vcf_files if _f]))
 
     processes = run_vcfstats(vcf_files, args.out_dir, args.log_dir)
 

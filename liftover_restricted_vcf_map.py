@@ -59,7 +59,7 @@ def lift_vcfs(vcfs, out_vcf, reference, tabix_index=True):
 
   # Write while removing non-unique entries after liftover
   vcf_writer = vcf.Writer(open(out_vcf, "w"), vcf_template_reader)
-  for index in xrange(len(vcf_records)):
+  for index in range(len(vcf_records)):
       curr_record = vcf_records[index]
       if index:
           prev_record = vcf_records[index - 1]

@@ -13,9 +13,9 @@ import glob
 import tempfile
 import re
 from distutils.version import LooseVersion
-from liftover_restricted_vcf_map import lift_vcfs, lift_maps
-from generate_small_test_ref import gen_restricted_ref_and_vcfs 
-from varsim import varsim_main, get_version, check_java, get_loglevel, makedirs, RandVCFOptions, RandDGVOptions, run_randvcf
+from .liftover_restricted_vcf_map import lift_vcfs, lift_maps
+from .generate_small_test_ref import gen_restricted_ref_and_vcfs 
+from .varsim import varsim_main, get_version, check_java, get_loglevel, makedirs, RandVCFOptions, RandDGVOptions, run_randvcf
 import pybedtools
 import pysam
 
@@ -66,7 +66,7 @@ def varsim_multi(reference,
         # Now lift over the restricted_sampling_vcf to get the region-limited VCF
         sampling_vcf = lift_vcfs([restricted_sampling_vcf], os.path.join(out_dir, "region_restricted", "region-restricted-sampling.vcf"), reference)
         
-    all_samples = samples + ["VarSim%d" % i for i in xrange(samples_random)]
+    all_samples = samples + ["VarSim%d" % i for i in range(samples_random)]
 
     for index, (sample, coverage) in enumerate(zip(all_samples, total_coverage)):
         sample_dir = os.path.join(out_dir, sample)
@@ -225,7 +225,7 @@ if __name__ == "__main__":
     randdgv_options = None if args.disable_rand_dgv else RandDGVOptions(args.sv_num_ins, args.sv_num_del, args.sv_num_dup, args.sv_num_inv, args.sv_percent_novel, args.sv_min_length_lim, args.sv_max_length_lim)
 
     num_samples = len(args.samples) + args.samples_random
-    total_coverage = map(float, args.total_coverage)
+    total_coverage = list(map(float, args.total_coverage))
     if len(total_coverage) == 1:
         total_coverage *= num_samples
     if len(total_coverage) != num_samples:

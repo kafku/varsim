@@ -57,7 +57,7 @@ def gen_restricted_vcf(in_vcf, regions_bed, out_vcf, restricted_reference, targe
 
     new_samples = []
     if targeted_samples:
-        for k,v in sorted(vcf_template_reader._sample_indexes.iteritems()):
+        for k,v in sorted(vcf_template_reader._sample_indexes.items()):
             if k in targeted_samples:
                 new_samples.append(k)
         vcf_template_reader.samples = new_samples
@@ -88,7 +88,7 @@ def gen_restricted_vcf(in_vcf, regions_bed, out_vcf, restricted_reference, targe
                 snames = []
                 sindexes = {}
             for s in new_samples:
-                for i in xrange(len(record.samples)):
+                for i in range(len(record.samples)):
                     if s == record.samples[i].sample:
                         sindexes[s] = i
                         snames.append(record.samples[i])
@@ -113,7 +113,7 @@ def gen_restricted_ref_and_vcfs(reference, invcfs, regions, samples, outdir, fla
         gen_restricted_reference(reference, regions, restricted_fasta, short_contig_names)
 
         if outvcfs:
-            outvcfs = map(lambda x: os.path.join(outdir, os.path.splitext(os.path.basename(x))[0]) if x else None, invcfs)
+            outvcfs = [os.path.join(outdir, os.path.splitext(os.path.basename(x))[0]) if x else None for x in invcfs]
             generated_vcfs = []
             for invcf, outvcf in zip(invcfs, outvcfs):
                 generated_vcfs.append(gen_restricted_vcf(invcf, regions, outvcf, restricted_fasta, samples, flank, short_contig_names))
