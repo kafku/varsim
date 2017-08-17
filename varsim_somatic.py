@@ -96,8 +96,8 @@ def varsim_somatic_main():
     dwgsim_group.add_argument("--dwgsim_options", help="DWGSIM command-line options", default="", required=False)
 
     art_group = main_parser.add_argument_group("ART options")
-    art_group.add_argument("--profile_1", metavar="profile_file1", help="Profile for first end", default=None, type=argparse.FileType('w'))
-    art_group.add_argument("--profile_2", metavar="profile_file2", help="Profile for second end", default=None, type=argparse.FileType('w'))
+    art_group.add_argument("--profile_1", metavar="profile_file1", help="Profile for first end", default=None, type=argparse.FileType('r'))
+    art_group.add_argument("--profile_2", metavar="profile_file2", help="Profile for second end", default=None, type=argparse.FileType('r'))
     art_group.add_argument("--art_options", help="ART command-line options", default="", required=False)
 
     args = main_parser.parse_args()
