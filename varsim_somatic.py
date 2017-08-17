@@ -8,8 +8,8 @@ import sys
 import subprocess
 import logging
 import time
-from .varsim import MY_DIR, VARSIMJAR, DEFAULT_VARSIMJAR, REQUIRE_VARSIMJAR
-from .varsim import check_java, makedirs, monitor_processes, check_executable, run_vcfstats, run_randvcf, get_version, RandVCFOptions
+from varsim import MY_DIR, VARSIMJAR, DEFAULT_VARSIMJAR, REQUIRE_VARSIMJAR
+from varsim import check_java, makedirs, monitor_processes, check_executable, run_vcfstats, run_randvcf, get_version, RandVCFOptions
 
 VARSIM_PY = os.path.join(MY_DIR, "varsim.py")
 
@@ -25,7 +25,7 @@ def varsim_somatic_main():
                              default="somatic_work")
     main_parser.add_argument("--log_dir", metavar="Log directory", help="Directory to log to",
                              default="somatic_log")
-    main_parser.add_argument("--reference", metavar="FASTA", help="Reference genome", required=True, type=file)
+    main_parser.add_argument("--reference", metavar="FASTA", help="Reference genome", required=True, type=argparse.FileType('r'))
     main_parser.add_argument("--seed", metavar="INT", help="Random number seed", type=int, default=0)
     main_parser.add_argument("--sex", metavar="Sex", help="Sex of the person (MALE/FEMALE)", required=False, type=str,
                              choices=["MALE", "FEMALE"], default="MALE")
@@ -34,8 +34,8 @@ def varsim_somatic_main():
                              choices=["art", "dwgsim"], default="art")
     main_parser.add_argument("--simulator_executable", metavar="PATH",
                              help="Path to the executable of the read simulator chosen"
-                             , required=True, type=file)
-    main_parser.add_argument("--varsim_jar", metavar="PATH", help="Path to VarSim.jar (deprecated)", type=file,
+                             , required=True, type=argparse.FileType('rb'))
+    main_parser.add_argument("--varsim_jar", metavar="PATH", help="Path to VarSim.jar (deprecated)", type=argparse.FileType('rb'),
                              default=DEFAULT_VARSIMJAR,
                              required=False)
     main_parser.add_argument("--read_length", metavar="INT", help="Length of read to simulate", default=100, type=int)
@@ -85,7 +85,7 @@ def varsim_somatic_main():
     rand_vcf_group.add_argument("--som_prop_het", metavar="FLOAT", help="Proportion of somatic heterozygous variants",
                                 default=1.0, type=float)
     rand_vcf_group.add_argument("--sv_insert_seq", metavar="FILE",
-                                help="Path to file containing concatenation of real insertion sequences", type=file,
+                                help="Path to file containing concatenation of real insertion sequences", type=argparse.FileType('r'),
                                 required=True)
 
     dwgsim_group = main_parser.add_argument_group("DWGSIM options")
@@ -96,8 +96,8 @@ def varsim_somatic_main():
     dwgsim_group.add_argument("--dwgsim_options", help="DWGSIM command-line options", default="", required=False)
 
     art_group = main_parser.add_argument_group("ART options")
-    art_group.add_argument("--profile_1", metavar="profile_file1", help="Profile for first end", default=None, type=file)
-    art_group.add_argument("--profile_2", metavar="profile_file2", help="Profile for second end", default=None, type=file)
+    art_group.add_argument("--profile_1", metavar="profile_file1", help="Profile for first end", default=None, type=argparse.FileType('w'))
+    art_group.add_argument("--profile_2", metavar="profile_file2", help="Profile for second end", default=None, type=argparse.FileType('w'))
     art_group.add_argument("--art_options", help="ART command-line options", default="", required=False)
 
     args = main_parser.parse_args()
